@@ -24,5 +24,6 @@
     "@angular/compiler-cli": "^20.0.0",
     "typescript": "^5.8.2"
   },
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "packageManager": "yarn@4.9.4"
 }
