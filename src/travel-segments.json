@@ -1,0 +1,88 @@
+[
+  {
+    "id": 1,
+    "type": "Zugfahrt",
+    "title": "Reisebeginn - Zug zum Flughafen",
+    "description": "Auf gehts heut mal nach BERLIN, das waren wir ja schon lange nicht mehr. Wir haben das ganze Kleinkindabteil für uns, falls die Reservierungen das tun was sie sollen. Wer weiß das schon.",
+    "time": "10.10.2025 19:04 Uhr nach Flughafen BER 10.10.2025 21:56 Uhr ",
+    "location": "Local Station → Airport",
+    "duration": "3 h ",
+    "icon": "🚂"
+  },  {
+    "id": 2,
+    "type": "Shuttle",
+    "title": "Shuttle service zum Hotel",
+    "description": "Direkt am Flughafen BER angekommen, gehts mit dem Shuttlebus direkt zum Hotel. Ist vorgebucht, wenn wir kein Bock haben nehmen wir aber nen Taxi.",
+    "time": "10.10.2025 19:04 Uhr nach Flughafen BER 10.10.2025 21:56 Uhr ",
+    "location": "BER → MOXY Hotel BER",
+    "duration": "15 min",
+    "icon": "🚌"
+  },
+  {
+    "id": 3,
+    "type": "Moxy Hotel BER",
+    "title": "Hotelbar und Check-in",
+    "description": "Einchecken, kurz was trinken, dann ab pennen.",
+    "location": "MOXY Hotel BER",
+    "time": "10.10.2025 22:30hr",
+    "icon": "🏨"
+  },
+  {
+    "id": 4,
+    "type": "Shuttle",
+    "title": "Shuttle service zum Flughafen",
+    "description": "Kurz noch ein Kaffee holen und gucken wann wir am Flughafen sein sollen. Verpflegung dort ist ziemliche grütze also Snacks ausm Hotel mitnehmen.",
+    "time": "11.10.2025 07:00 Uhr nach Flughafen BER 11.10.2025 07:30 Uhr ",
+    "location": "MOXY Hotel BER → Airport",
+    "duration": "30 min",
+    "icon": "🚌"},
+  
+  {
+    "id": 5,
+    "type": "Flug",
+    "title": "Flug nach London",
+    "description": "Auf auf nach London, äh na ja so ähnlich. Standstead halt. Wir fliegen mit Ryanair, also bitte auf 10 kg Gepäck beschränken. Sofia darf 20 kg mitnehmen, also packen wir ihm Zweifel halt um. Sie braucht das nicht",
+    "time": "9:20 AM",
+    "location": "BER - STN",
+    "duration": "50 min",
+    "icon": "✈️"
+  },
+  {
+    "id": 6,
+    "type": "Stansted Express",
+    "title": "Zug zum Mittlepunkt der Erde",
+    "description": "Irendwie müssen wir jetzt noch zum Hotel kommen. Wir nehmen den Stansted Express, der fährt alle 15 min und braucht 45 min bis Liverpool Street Station. Von da aus bis West Kensington sind es nochmal 40 min mit der TUBE, aber wir haben ja zeit..",
+    "location": "Stanstead → Central London",
+    "duration": "2h",
+    "icon": "🚇"
+  },
+  {
+    "id": 7,
+    "type": "hotel",
+    "title": "W14 -Kensington Hotel",
+    "description": "Kennen wir schon, ist zenral, niedlich und es gibt güüüünstige Einzelzimmer.",
+    "time": "04:30 PM",
+    "location": "Gunterstone Road, London",
+    "icon": "🏨"
+  },
+  {
+    "id": 5,
+    "type": "NFL Game",
+    "title": "New York Jets vs. Denver Broncos",
+    "description": "Halt dich fest, verdammte 200 Pfund pro Karte. Aber ist halt nen JETS Heimspiel und was tun wir nicht alles für Marc.",
+    "time": "14:30",
+    "location": "Tottenham Hotspur Stadium, London",
+    "seats": "Block 507, Reihe 18, Plätze 240,241,242",
+    "duration": "4h 30min",
+    "icon": "🏈"
+  },
+  {
+    "id": 7,
+    "type": "Rückflug",
+    "title": "Ab nach Hause",
+    "description": "So, reicht auch wieder, jetzt aber ab Heathrow direkt nach Hannover.",
+    "time": "13:15 -15:50",
+    "location": "Heathrow Airport (LHR) - HAJ Airport",
+    "icon": "🛫"
+  }
+]

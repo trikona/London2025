@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { AuthService as Auth0Service, User as Auth0User } from '@auth0/auth0-angular';
+import { Observable, combineLatest, map } from 'rxjs';
 
 export interface User {
   id: string;
@@ -18,128 +19,44 @@ export interface AuthState {
   providedIn: 'root'
 })
 export class AuthService {
-  private authState = new BehaviorSubject<AuthState>({
-    isAuthenticated: false,
-    user: null,
-    loading: false
-  });
+  public authState$: Observable<AuthState>;
 
-  public authState$ = this.authState.asObservable();
-
-  constructor() {
-    // Check for existing session on service initialization
-    this.checkExistingSession();
+  constructor(private auth0: Auth0Service) {
+    this.authState$ = combineLatest([
+      this.auth0.isAuthenticated$,
+      this.auth0.user$,
+      this.auth0.isLoading$
+    ]).pipe(
+      map(([isAuthenticated, auth0User, loading]) => ({
+        isAuthenticated: !!isAuthenticated,
+        user: auth0User ? this.mapAuth0User(auth0User) : null,
+        loading: !!loading
+      }))
+    );
   }
 
-  private checkExistingSession(): void {
-    const savedUser = localStorage.getItem('travel_user');
-    if (savedUser) {
-      try {
-        const user = JSON.parse(savedUser);
-        this.authState.next({
-          isAuthenticated: true,
-          user,
-          loading: false
-        });
-      } catch (error) {
-        localStorage.removeItem('travel_user');
-      }
-    }
-  }
-
-  async signInWithGoogle(): Promise<void> {
-    this.setLoading(true);
-    
-    // Simulate OAuth flow delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // Simulate successful Google OAuth response
-    const mockUser: User = {
-      id: 'google_' + Math.random().toString(36).substr(2, 9),
-      email: 'traveler@gmail.com',
-      name: 'Travel Enthusiast',
-      avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1'
+  private mapAuth0User(auth0User: Auth0User): User {
+    return {
+      id: auth0User.sub ?? '',
+      email: auth0User.email ?? '',
+      name: auth0User.name ?? '',
+      avatar: auth0User.picture
     };
-
-    localStorage.setItem('travel_user', JSON.stringify(mockUser));
-    
-    this.authState.next({
-      isAuthenticated: true,
-      user: mockUser,
-      loading: false
-    });
   }
 
-  async signInWithGitHub(): Promise<void> {
-    this.setLoading(true);
-    
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    const mockUser: User = {
-      id: 'github_' + Math.random().toString(36).substr(2, 9),
-      email: 'developer@github.com',
-      name: 'Code Traveler',
-      avatar: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1'
-    };
-
-    localStorage.setItem('travel_user', JSON.stringify(mockUser));
-    
-    this.authState.next({
-      isAuthenticated: true,
-      user: mockUser,
-      loading: false
-    });
-  }
-
-  async signInWithEmail(email: string, password: string): Promise<void> {
-    this.setLoading(true);
-    
-    await new Promise(resolve => setTimeout(resolve, 1200));
-    
-    // Simple validation for demo purposes
-    if (email && password.length >= 6) {
-      const mockUser: User = {
-        id: 'email_' + Math.random().toString(36).substr(2, 9),
-        email: email,
-        name: email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1),
-        avatar: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1'
-      };
-
-      localStorage.setItem('travel_user', JSON.stringify(mockUser));
-      
-      this.authState.next({
-        isAuthenticated: true,
-        user: mockUser,
-        loading: false
-      });
-    } else {
-      this.setLoading(false);
-      throw new Error('Invalid email or password. Password must be at least 6 characters.');
-    }
+  signIn(): void {
+    this.auth0.loginWithRedirect();
   }
 
   signOut(): void {
-    localStorage.removeItem('travel_user');
-    this.authState.next({
-      isAuthenticated: false,
-      user: null,
-      loading: false
-    });
+    this.auth0.logout({ logoutParams: { returnTo: window.location.origin } });
   }
 
-  private setLoading(loading: boolean): void {
-    const currentState = this.authState.value;
-    this.authState.next({
-      ...currentState,
-      loading
-    });
+  getCurrentUser(): Observable<User | null> {
+    return this.auth0.user$.pipe(map(u => (u ? this.mapAuth0User(u) : null)));
   }
 
-  getCurrentUser(): User | null {
-    return this.authState.value.user;
-  }
-
-  isAuthenticated(): boolean {
-    return this.authState.value.isAuthenticated;
+  isAuthenticated(): Observable<boolean> {
+    return this.auth0.isAuthenticated$;
   }
 }

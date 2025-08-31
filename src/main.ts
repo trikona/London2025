@@ -3,7 +3,8 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { AuthService, AuthState } from './auth.service';
 import { LoginComponent } from './login.component';
-
+import { provideAuth0 } from '@auth0/auth0-angular';
+import travelSegmentsData from './travel-segments.json';
 interface TravelSegment {
   id: number;
   type: 'train' | 'flight' | 'hotel' | 'event';
@@ -465,77 +466,7 @@ export class App {
     loading: false
   };
 
-  travelSegments: TravelSegment[] = [
-    {
-      id: 1,
-      type: 'train',
-      title: 'Departure Journey',
-      description: 'Begin your adventure with a comfortable train ride to the airport',
-      time: '08:00 AM',
-      location: 'Local Station → Airport',
-      duration: '1h 30min',
-      icon: '🚂'
-    },
-    {
-      id: 2,
-      type: 'flight',
-      title: 'Flight to London',
-      description: 'Soar through the clouds on your way to the heart of England',
-      time: '11:30 AM',
-      location: 'Heathrow Airport (LHR)',
-      duration: '2h 45min',
-      icon: '✈️'
-    },
-    {
-      id: 3,
-      type: 'train',
-      title: 'London Underground',
-      description: 'Navigate the famous London Tube system to reach your destination',
-      time: '03:15 PM',
-      location: 'Heathrow → Central London',
-      duration: '45min',
-      icon: '🚇'
-    },
-    {
-      id: 4,
-      type: 'hotel',
-      title: 'Hotel Check-in',
-      description: 'Settle into your comfortable accommodation in the heart of London',
-      time: '04:30 PM',
-      location: 'Covent Garden Hotel',
-      icon: '🏨'
-    },
-    {
-      id: 5,
-      type: 'event',
-      title: 'Evening Theatre Show',
-      description: 'Experience world-class entertainment in London\'s famous West End',
-      time: '07:30 PM',
-      location: 'West End Theatre',
-      duration: '2h 30min',
-      icon: '🎭'
-    },
-    {
-      id: 6,
-      type: 'train',
-      title: 'Return Train Journey',
-      description: 'Take the express train back to the airport for your departure',
-      time: '10:00 AM (Next Day)',
-      location: 'Central London → Heathrow',
-      duration: '45min',
-      icon: '🚄'
-    },
-    {
-      id: 7,
-      type: 'flight',
-      title: 'Return Flight',
-      description: 'Fly back home with wonderful memories of your London adventure',
-      time: '01:15 PM',
-      location: 'Heathrow Airport (LHR)',
-      duration: '2h 45min',
-      icon: '🛫'
-    }
-  ];
+  travelSegments: TravelSegment[] = travelSegmentsData as TravelSegment[]; // <-- Use imported data
 
   constructor(private authService: AuthService) {
     this.authService.authState$.subscribe(state => {
@@ -564,4 +495,14 @@ export class App {
   }
 }
 
-bootstrapApplication(App);
+bootstrapApplication(App, {
+  providers: [
+    provideAuth0({
+      domain: 'dev-sbay6n7td66fskok.eu.auth0.com',
+      clientId: 'Fg1xwuuDSGMLH5LEKGmi3C7nRSAc7AH7',
+      authorizationParams: {
+        redirect_uri: window.location.origin
+      }
+    })
+  ]
+});

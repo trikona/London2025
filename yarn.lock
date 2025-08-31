@@ -439,6 +439,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@auth0/auth0-angular@npm:^2.2.3":
+  version: 2.2.3
+  resolution: "@auth0/auth0-angular@npm:2.2.3"
+  dependencies:
+    "@auth0/auth0-spa-js": "npm:^2.0.1"
+    tslib: "npm:^2.0.0"
+  peerDependencies:
+    "@angular/common": ">=13"
+    "@angular/core": ">=13"
+    "@angular/router": ">=13"
+  checksum: 10c0/54f73e1fda903bf43859ea762d68ee47b1f0a336afc6edb4d2b2f707ca91fc1a970f6575570bcc3650250818aed1eca53811c281dbdfa19918237bd2fe0387d6
+  languageName: node
+  linkType: hard
+
+"@auth0/auth0-spa-js@npm:^2.0.1":
+  version: 2.3.0
+  resolution: "@auth0/auth0-spa-js@npm:2.3.0"
+  checksum: 10c0/c7ac73e6bcec0e5b319b0a34756df7e0a00cf25628d5ebf625dc44aeda36abbabb30cdfbe217fbcc2161b8f133fbf93d5ec8f3cd41ccbda5a0713ca693d2194b
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:^7.27.1":
   version: 7.27.1
   resolution: "@babel/code-frame@npm:7.27.1"
@@ -2220,6 +2241,7 @@ __metadata:
     "@angular/forms": "npm:^20.0.0"
     "@angular/platform-browser": "npm:^20.0.0"
     "@angular/router": "npm:^20.0.0"
+    "@auth0/auth0-angular": "npm:^2.2.3"
     rxjs: "npm:^7.8.1"
     tslib: "npm:^2.5.0"
     typescript: "npm:^5.8.2"
@@ -5059,7 +5081,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.1.0, tslib@npm:^2.3.0, tslib@npm:^2.4.0, tslib@npm:^2.5.0":
+"tslib@npm:^2.0.0, tslib@npm:^2.1.0, tslib@npm:^2.3.0, tslib@npm:^2.4.0, tslib@npm:^2.5.0":
   version: 2.8.1
   resolution: "tslib@npm:2.8.1"
   checksum: 10c0/9c4759110a19c53f992d9aae23aac5ced636e99887b51b9e61def52611732872ff7668757d4e4c61f19691e36f4da981cd9485e869b4a7408d689f6bf1f14e62
