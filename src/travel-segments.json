@@ -21,7 +21,7 @@
   {
     "id": 3,
     "type": "hotel",
-    "title": "Hotelbar und Check-in",
+    "title": "Moxy Hotel Berlin",
     "description": "Einchecken, kurz was trinken, dann ab pennen.",
     "location": "MOXY Hotel BER",
     "time": "10.10.2025 22:30hr",
@@ -51,7 +51,7 @@
     "id": 6,
     "type": "train",
     "title": "Zug zum Mittlepunkt der Erde",
-    "description": "Irendwie müssen wir jetzt noch zum Hotel kommen. Wir nehmen den Stansted Express, der fährt alle 15 min und braucht 45 min bis Liverpool Street Station. Von da aus bis West Kensington sind es nochmal 40 min mit der TUBE, aber wir haben ja zeit..",
+    "description": "Irgendwie müssen wir jetzt noch zum Hotel kommen. Wir nehmen den Stansted Express, der fährt alle 15 min und braucht 45 min bis Liverpool Street Station. Von da aus bis West Kensington sind es nochmal 40 min mit der TUBE, aber wir haben ja zeit..",
     "location": "Stanstead → Central London",
     "duration": "2h",
     "icon": "🚇"

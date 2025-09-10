@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { bootstrapApplication } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
-import { AuthService, AuthState } from './auth.service';
-import { LoginComponent } from './login.component';
-import { provideAuth0 } from '@auth0/auth0-angular';
+
 import travelSegmentsData from './travel-segments.json';
+import { AuthService, AuthState } from './auth.service';
+
 interface TravelSegment {
   id: number;
   type: 'train' | 'flight' | 'hotel' | 'event';
@@ -17,15 +16,11 @@ interface TravelSegment {
 }
 
 @Component({
-  selector: 'travel',
+  selector: 'travel-overview',
   standalone: true,
-  imports: [CommonModule, LoginComponent],
+  imports: [CommonModule],
   template: `
-    <!-- Login Screen -->
-    <app-login *ngIf="!authState.isAuthenticated"></app-login>
-
-    <!-- Main Travel App -->
-    <div class="travel-app" *ngIf="authState.isAuthenticated">
+    <div class="travel-app">
       <!-- Header -->
       <header class="header">
         <div class="container">
@@ -117,71 +112,67 @@ interface TravelSegment {
     </div>
   `,
   styles: [`
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    .travel-app {
+       .travel-app {
       min-height: 100vh;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: #22223b;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background: transparent;
+      padding: 32px 0 16px 0;
     }
 
     .container {
-      max-width: 1200px;
+      width: 100%;
+      max-width: 900px;
       margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    /* Header Styles */
-    .header {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      padding: 32px 0;
-      color: white;
+      padding: 0 16px;
     }
 
     .header-content {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
       flex-wrap: wrap;
-      gap: 24px;
     }
 
     .header-left {
-      text-align: left;
+      flex: 1;
     }
 
     .main-title {
-      font-size: 3rem;
+      font-size: 2.5rem;
       font-weight: 700;
       margin-bottom: 8px;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      color: #fff;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .subtitle {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       opacity: 0.9;
       font-weight: 300;
+      color: #fff;
+      margin-bottom: 0;
     }
 
     .header-right {
       display: flex;
       align-items: center;
+      margin-left: 24px;
     }
 
     .user-profile {
       display: flex;
       align-items: center;
-      gap: 16px;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 12px 20px;
-      border-radius: 50px;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255,255,255,0.15);
+      border-radius: 16px;
+      padding: 8px 16px;
+      box-shadow: 0 2px 8px rgba(59,130,246,0.10);
     }
 
     .user-avatar {
@@ -189,276 +180,258 @@ interface TravelSegment {
       height: 48px;
       border-radius: 50%;
       object-fit: cover;
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      margin-right: 12px;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 8px rgba(59,130,246,0.10);
     }
 
     .user-info {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      align-items: flex-start;
     }
 
     .user-name {
       font-weight: 600;
-      font-size: 0.875rem;
-      color: white;
+      color: #fff;
+      margin-bottom: 4px;
+      font-size: 1rem;
     }
 
     .sign-out-btn {
-      background: none;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: rgba(255, 255, 255, 0.8);
-      padding: 4px 12px;
+      background: linear-gradient(90deg, #3b82f6 0%, #764ba2 100%);
+      color: #fff;
+      border: none;
       border-radius: 16px;
-      font-size: 0.75rem;
+      padding: 6px 18px;
+      font-size: 0.95rem;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(59,130,246,0.10);
+      transition: background 0.3s, box-shadow 0.3s;
     }
-
     .sign-out-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-      border-color: rgba(255, 255, 255, 0.5);
+      background: linear-gradient(90deg, #2563eb 0%, #7c3aed 100%);
+      box-shadow: 0 6px 20px rgba(59,130,246,0.18);
     }
 
-    /* Main Content */
     .main-content {
-      padding: 48px 0;
+      flex: 1;
+      padding: 32px 0 24px 0;
     }
 
-    /* Timeline Styles */
     .timeline {
-      position: relative;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 32px;
-      top: 0;
-      bottom: 0;
-      width: 3px;
-      background: linear-gradient(to bottom, #3b82f6, #10b981);
-      border-radius: 2px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
     }
 
     .timeline-item {
-      position: relative;
-      margin-bottom: 40px;
-      padding-left: 80px;
-      transition: all 0.3s ease;
-    }
-
-    .timeline-marker {
-      position: absolute;
-      left: 0;
-      top: 8px;
-      width: 64px;
-      height: 64px;
-      background: white;
-      border-radius: 50%;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      z-index: 2;
-      transition: all 0.3s ease;
+      align-items: flex-start;
+      gap: 24px;
+      position: relative;
+      transition: background 0.2s;
     }
 
-    .timeline-item.active .timeline-marker {
-      transform: scale(1.1);
-      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
-      background: #3b82f6;
-    }
-
-    .timeline-item.active .icon {
-      color: white;
-    }
-
-    .timeline-item.completed .timeline-marker {
-      background: #10b981;
-    }
-
-    .timeline-item.completed .icon {
-      color: white;
-    }
-
-    .icon {
-      font-size: 1.5rem;
-      transition: color 0.3s ease;
-    }
-
-    /* Travel Card Styles */
-    .travel-card {
-      background: white;
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .travel-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+    .timeline-item.completed .travel-card {
+      opacity: 0.7;
+      background: #e0e7ff;
     }
 
     .timeline-item.active .travel-card {
       border: 2px solid #3b82f6;
-      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.2);
+      box-shadow: 0 4px 24px rgba(59,130,246,0.10);
+      background: #fff;
+    }
+
+    .timeline-marker {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .icon {
+      font-size: 2.2rem;
+      background: #fff;
+      border-radius: 50%;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(59,130,246,0.10);
+      border: 2px solid #3b82f6;
+    }
+
+    .timeline-content {
+      flex: 1;
+    }
+
+    .travel-card {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 24px 28px;
+      cursor: pointer;
+      transition: box-shadow 0.2s, border 0.2s, background 0.2s;
+      border: 2px solid transparent;
+      margin-bottom: 4px;
+    }
+
+    .travel-card:hover {
+      box-shadow: 0 8px 32px rgba(59,130,246,0.18);
+      border: 2px solid #764ba2;
     }
 
     .card-header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
+      justify-content: space-between;
+      margin-bottom: 8px;
     }
 
     .card-title {
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       font-weight: 600;
-      color: #1f2937;
+      color: #22223b;
+      margin: 0;
     }
 
     .travel-type {
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 0.875rem;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 4px 14px;
+      border-radius: 12px;
+      text-transform: capitalize;
+      margin-left: 12px;
+      background: #e0e7ff;
+      color: #3b82f6;
+      letter-spacing: 1px;
     }
+    .travel-type.train { background: #e0e7ff; color: #2563eb; }
+    .travel-type.flight { background: #f0e7ff; color: #7c3aed; }
+    .travel-type.hotel { background: #ffe7e7; color: #ef4444; }
+    .travel-type.event { background: #e7fff3; color: #059669; }
 
-    .travel-type.train {
-      background: #dbeafe;
-      color: #1d4ed8;
-    }
-
-    .travel-type.flight {
-      background: #f3e8ff;
-      color: #7c3aed;
-    }
-
-    .travel-type.hotel {
-      background: #d1fae5;
-      color: #065f46;
-    }
-
-    .travel-type.event {
-      background: #fed7d7;
-      color: #c53030;
+    .card-body {
+      margin-top: 8px;
     }
 
     .description {
-      color: #6b7280;
       font-size: 1rem;
-      line-height: 1.6;
-      margin-bottom: 16px;
+      color: #4b5563;
+      margin-bottom: 12px;
     }
 
     .details {
-      display: grid;
-      gap: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
     }
 
     .detail-item {
+      font-size: 0.97rem;
+      color: #374151;
+      background: #f3f4f6;
+      border-radius: 8px;
+      padding: 4px 12px;
+      margin-bottom: 4px;
       display: flex;
-      justify-content: space-between;
+      gap: 4px;
       align-items: center;
     }
 
     .detail-label {
       font-weight: 500;
-      color: #374151;
+      color: #6b7280;
+      margin-right: 2px;
     }
 
     .detail-value {
-      color: #6b7280;
       font-weight: 400;
+      color: #22223b;
     }
 
-    /* Footer Styles */
     .footer {
-      background: rgba(0, 0, 0, 0.1);
-      backdrop-filter: blur(10px);
-      padding: 32px 0;
-      margin-top: 48px;
+      background: transparent;
+      padding: 24px 0 16px 0;
     }
 
     .summary-stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 32px;
-      text-align: center;
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
     }
 
     .stat-item {
-      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(255,255,255,0.18);
+      border-radius: 16px;
+      padding: 16px 32px;
+      box-shadow: 0 2px 8px rgba(59,130,246,0.10);
+      min-width: 120px;
     }
 
     .stat-number {
-      display: block;
-      font-size: 2.5rem;
+      font-size: 2rem;
       font-weight: 700;
-      margin-bottom: 8px;
+      color: #fff;
+      margin-bottom: 4px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.10);
     }
 
     .stat-label {
       font-size: 1rem;
+      color: #f3f4f6;
+      font-weight: 400;
       opacity: 0.9;
-      font-weight: 300;
     }
 
-    /* Responsive Design */
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
+      .container {
+        max-width: 100%;
+        padding: 0 8px;
+      }
+      .main-content {
+        padding: 16px 0 12px 0;
+      }
+      .timeline {
+        gap: 20px;
+      }
+      .travel-card {
+        padding: 16px 8px;
+      }
+    }
+
+    @media (max-width: 600px) {
       .header-content {
         flex-direction: column;
-        text-align: center;
+        align-items: flex-start;
+        gap: 16px;
       }
-
-      .header-left {
-        text-align: center;
-      }
-
       .main-title {
         font-size: 2rem;
       }
-
-      .container {
-        padding: 0 16px;
+      .stat-item {
+        padding: 12px 8px;
+        min-width: 90px;
       }
-
-      .timeline-item {
-        padding-left: 64px;
-      }
-
-      .timeline::before {
-        left: 24px;
-      }
-
-      .timeline-marker {
-        left: -8px;
-        width: 48px;
-        height: 48px;
-      }
-
-      .card-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-      }
-
-      .summary-stats {
-        grid-template-columns: 1fr;
-        gap: 24px;
+      .timeline-marker .icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.3rem;
       }
     }
+  
   `]
 })
-export class TravelComponent {
+export class TravelOverviewComponent {
   currentStep = 0;
   authState: AuthState = {
     isAuthenticated: false,
@@ -466,7 +439,7 @@ export class TravelComponent {
     loading: false
   };
 
-  travelSegments: TravelSegment[] = travelSegmentsData as TravelSegment[]; // <-- Use imported data
+  travelSegments: TravelSegment[] = travelSegmentsData as TravelSegment[];
 
   constructor(private authService: AuthService) {
     this.authService.authState$.subscribe(state => {
@@ -494,5 +467,3 @@ export class TravelComponent {
     this.authService.signOut();
   }
 }
-
-;
