@@ -1,33 +1,57 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
+import { provideRouter, RouterOutlet, Routes, CanActivateFn, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AuthService, AuthState } from './auth.service';
+import { provideAuth0, AuthService as Auth0Service } from '@auth0/auth0-angular';
 import { LoginComponent } from './login.component';
-import { provideAuth0 } from '@auth0/auth0-angular';
 import { TravelOverviewComponent } from './travel-overview.component';
-import travelSegmentsData from './travel-segments.json';
-interface TravelSegment {
-  id: number;
-  type: 'train' | 'flight' | 'hotel' | 'event';
-  title: string;
-  description: string;
-  time: string;
-  location: string;
-  icon: string;
-  duration?: string;
-}
+    import { map } from 'rxjs/operators';
+import { AuthService, AuthState } from './auth.service';
+// Auth Guard: Only allow navigation if authenticated, otherwise redirect to login
+const authGuard: CanActivateFn = () => {
+  const auth = inject(Auth0Service);
+  return auth.isAuthenticated$.pipe(
+    // If not authenticated, trigger login and block navigation
+    // If authenticated, allow navigation
+    // Auth0 will handle redirect automatically
+    // If you want to redirect to login route, you can do so here
+    // But with Auth0, just call loginWithRedirect
+    // and return false to block navigation
+    // Otherwise, return true
+    // This will work for observable-based guards in Angular 15+
+    // (If using older Angular, use a class-based guard)
+    // Here, we use tap to trigger login if not authenticated
+    // and map to true/false for navigation
 
+    map(isAuth => {
+      if (!isAuth) {
+        auth.loginWithRedirect();
+        return false;
+      }
+      return true;
+    })
+  );
+};
+
+
+
+const routes: Routes = [
+  { path: '', component: LoginComponent },
+  { path: 'login', component: LoginComponent },
+  {
+    path: 'travel-overview',
+    component: TravelOverviewComponent,
+    canActivate: [authGuard]
+  },
+  { path: '**', redirectTo: '' }
+];
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, LoginComponent, TravelOverviewComponent],
+  imports: [CommonModule, RouterOutlet,],
   template: `
-    <!-- Login Screen -->
-    <app-login *ngIf="!authState.isAuthenticated"></app-login>
+   <router-outlet></router-outlet>`
 
-    <!-- Main Travel App -->
-    <travel-overview  *ngIf="authState.isAuthenticated"></travel-overview>
-  `
 })
 export class App {
   currentStep = 0;
@@ -37,28 +61,16 @@ export class App {
     loading: false
   };
 
-  travelSegments: TravelSegment[] = travelSegmentsData as TravelSegment[]; // <-- Use imported data
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private router: Router) {
     this.authService.authState$.subscribe(state => {
       this.authState = state;
+         // Redirect to /travel-overview if authenticated and not already there
+      if (state.isAuthenticated && this.router.url !== '/travel-overview') {
+        this.router.navigate(['/travel-overview']);
+      }
+
     });
-  }
-
-  setActiveStep(index: number): void {
-    this.currentStep = index;
-  }
-
-  getTotalSegments(): number {
-    return this.travelSegments.length;
-  }
-
-  getFlightCount(): number {
-    return this.travelSegments.filter(segment => segment.type === 'flight').length;
-  }
-
-  getTrainCount(): number {
-    return this.travelSegments.filter(segment => segment.type === 'train').length;
   }
 
   signOut(): void {
@@ -68,11 +80,12 @@ export class App {
 
 bootstrapApplication(App, {
   providers: [
+    provideRouter(routes),
     provideAuth0({
       domain: 'dev-sbay6n7td66fskok.eu.auth0.com',
       clientId: 'Fg1xwuuDSGMLH5LEKGmi3C7nRSAc7AH7',
       authorizationParams: {
-        redirect_uri: window.location.origin+'/travel-overview',
+        redirect_uri: window.location.origin + '/travel-overview',
       }
     })
   ]
