@@ -85,7 +85,7 @@ bootstrapApplication(App, {
       domain: 'dev-sbay6n7td66fskok.eu.auth0.com',
       clientId: 'Fg1xwuuDSGMLH5LEKGmi3C7nRSAc7AH7',
       authorizationParams: {
-        redirect_uri: window.location.origin + '/travel-overview',
+        redirect_uri: window.location.origin,
       }
     })
   ]
