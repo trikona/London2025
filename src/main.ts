@@ -88,7 +88,7 @@ bootstrapApplication(App, {
       clientId: 'Fg1xwuuDSGMLH5LEKGmi3C7nRSAc7AH7',
       authorizationParams: {
         redirect_uri: window.location.origin,
-        audience: 'andrea-kittner.eu/api'
+        audience: 'andrea-kittner.eu/apis'
       }
     })
   ]
