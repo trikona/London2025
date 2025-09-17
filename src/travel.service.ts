@@ -16,7 +16,8 @@ export class TravelService {
         return from(this.auth.getAccessTokenSilently()).pipe(
             switchMap(token => {
                 const headers = new HttpHeaders({
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
+                    Trixi:`Bearer ${token}`
                 });
                 return this.http.get<any>(this.apiUrl, { headers });
             })
