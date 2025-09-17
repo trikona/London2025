@@ -5,8 +5,9 @@ import { CommonModule } from '@angular/common';
 import { provideAuth0, AuthService as Auth0Service } from '@auth0/auth0-angular';
 import { LoginComponent } from './login.component';
 import { TravelOverviewComponent } from './travel-overview.component';
-    import { map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { AuthService, AuthState } from './auth.service';
+import { provideHttpClient } from '@angular/common/http';
 // Auth Guard: Only allow navigation if authenticated, otherwise redirect to login
 const authGuard: CanActivateFn = () => {
   const auth = inject(Auth0Service);
@@ -48,7 +49,7 @@ const routes: Routes = [
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet,],
+  imports: [CommonModule, RouterOutlet],
   template: `
    <router-outlet></router-outlet>`
 
@@ -65,7 +66,7 @@ export class App {
   constructor(private authService: AuthService, private router: Router) {
     this.authService.authState$.subscribe(state => {
       this.authState = state;
-         // Redirect to /travel-overview if authenticated and not already there
+      // Redirect to /travel-overview if authenticated and not already there
       if (state.isAuthenticated && this.router.url !== '/travel-overview') {
         this.router.navigate(['/travel-overview']);
       }
@@ -81,11 +82,13 @@ export class App {
 bootstrapApplication(App, {
   providers: [
     provideRouter(routes),
+    provideHttpClient(),
     provideAuth0({
       domain: 'dev-sbay6n7td66fskok.eu.auth0.com',
       clientId: 'Fg1xwuuDSGMLH5LEKGmi3C7nRSAc7AH7',
       authorizationParams: {
         redirect_uri: window.location.origin,
+        audience: 'andrea-kittner.eu/api'
       }
     })
   ]

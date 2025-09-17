@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import travelSegmentsData from './travel-segments.json';
 import { AuthService, AuthState } from './auth.service';
+import { TravelService } from './travel.service';
 
 interface TravelSegment {
   id: number;
@@ -439,11 +438,14 @@ export class TravelOverviewComponent {
     loading: false
   };
 
-  travelSegments: TravelSegment[] = travelSegmentsData as TravelSegment[];
+  travelSegments: TravelSegment[] = [];
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService,     private travelService: TravelService) {
     this.authService.authState$.subscribe(state => {
       this.authState = state;
+    });
+     this.travelService.getTravelSegments().subscribe(segments => {
+      this.travelSegments = segments;
     });
   }
 
