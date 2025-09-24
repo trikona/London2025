@@ -28,7 +28,7 @@ interface TravelSegment {
           <div class="header-content">
             <div class="header-left">
               <h1 class="main-title">✈️ London Adventure</h1>
-              <p class="subtitle">Your complete travel itinerary</p>
+              <p class="subtitle">Dein kompletter Reiseüberblick.<br/> Das wichtigste: Ryanair hat <u>10 kg Gepäckbegrenzung</u>, wenn du mehr brauchst, sag Bescheid.</p>
             </div>
             <div class="header-right">
               <div class="user-profile" *ngIf="authState.user">
@@ -97,7 +97,11 @@ interface TravelSegment {
                       target="_blank" 
                       title="Download segment details"
                     >
-                      <span class="download-icon">⬇️</span>
+                      <span class="download-icon" aria-label="Download">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</span>
                     </a>
                   </div>
                 </div>
