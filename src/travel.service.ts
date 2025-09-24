@@ -12,14 +12,13 @@ export class TravelService {
 
     constructor(private http: HttpClient, private auth: AuthService) {}
 
-    getTravelSegments(): Observable<any> {
+    getTravelSegments(userId: string): Observable<any> {
         return from(this.auth.getAccessTokenSilently()).pipe(
             switchMap(token => {
                 const headers = new HttpHeaders({
-                    Authorization: `Bearer ${token}`,
                     Trixi:`Bearer ${token}`
                 });
-                return this.http.get<any>(this.apiUrl, { headers });
+                return this.http.get<any>(`${this.apiUrl}?userId=${userId}`, { headers });
             })
         );
     }

@@ -12,6 +12,8 @@ interface TravelSegment {
   location: string;
   icon: string;
   duration?: string;
+  seats?: string;
+  link?: string;
 }
 
 @Component({
@@ -72,20 +74,36 @@ interface TravelSegment {
                         <span class="detail-label">Time:</span>
                         <span class="detail-value">{{ segment.time }}</span>
                       </div>
+
+             <div class="detail-item" *ngIf="segment.seats">
+                        <span class="detail-label">Plätze:</span>
+                        <span class="detail-value">{{ segment.seats }}</span>
+                      </div>
+                    </div>
+
                       <div class="detail-item">
                         <span class="detail-label">Location:</span>
                         <span class="detail-value">{{ segment.location }}</span>
                       </div>
+
                       <div class="detail-item" *ngIf="segment.duration">
                         <span class="detail-label">Duration:</span>
                         <span class="detail-value">{{ segment.duration }}</span>
                       </div>
                     </div>
+             
+                     <div class="download-link" *ngIf="segment.link">
+                    <a href="/api/download.php?id={{segment.link}}" 
+                      target="_blank" 
+                      title="Download segment details"
+                    >
+                      <span class="download-icon">⬇️</span>
+                    </a>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </div>a
         </div>
       </main>
 
@@ -317,6 +335,7 @@ interface TravelSegment {
 
     .card-body {
       margin-top: 8px;
+      position: relative;
     }
 
     .description {
@@ -392,6 +411,19 @@ interface TravelSegment {
       opacity: 0.9;
     }
 
+    .download-link {
+      position: absolute;
+      right: 12px;
+      bottom: 8px;
+      text-decoration: none;
+      font-size: 1.5rem;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .download-link:hover {
+      opacity: 1;
+    }
+
     @media (max-width: 900px) {
       .container {
         max-width: 100%;
@@ -440,13 +472,18 @@ export class TravelOverviewComponent {
 
   travelSegments: TravelSegment[] = [];
 
-  constructor(private authService: AuthService,     private travelService: TravelService) {
+  constructor(private authService: AuthService, private travelService: TravelService) {
     this.authService.authState$.subscribe(state => {
       this.authState = state;
     });
-     this.travelService.getTravelSegments().subscribe(segments => {
-      this.travelSegments = segments;
-    });
+
+
+    if (this.authState.user?.id) {
+      this.travelService.getTravelSegments(this.authState.user.name
+      ).subscribe(segments => {
+        this.travelSegments = segments;
+      });
+    }
   }
 
   setActiveStep(index: number): void {
