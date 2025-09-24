@@ -103,7 +103,7 @@ interface TravelSegment {
                 </div>
               </div>
             </div>
-          </div>a
+          </div>
         </div>
       </main>
 
@@ -475,12 +475,18 @@ export class TravelOverviewComponent {
   constructor(private authService: AuthService, private travelService: TravelService) {
     this.authService.authState$.subscribe(state => {
       this.authState = state;
+      if (state.isAuthenticated) {
+        this.loadTravelSegments();
+      }
     });
 
+    console.log('Auth State:', this.authState.user?.name);
+    
+  }
 
+  private loadTravelSegments(): void {
     if (this.authState.user?.id) {
-      this.travelService.getTravelSegments(this.authState.user.name
-      ).subscribe(segments => {
+      this.travelService.getTravelSegments(this.authState.user.id).subscribe(segments => {
         this.travelSegments = segments;
       });
     }
