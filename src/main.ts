@@ -84,7 +84,7 @@ bootstrapApplication(App, {
     provideRouter(routes),
     provideHttpClient(),
     provideAuth0({
-      domain: 'dev-sbay6n7td66fskok.eu.auth0.com',
+      domain: 'login.andrea-kittner.eu',
       clientId: 'Fg1xwuuDSGMLH5LEKGmi3C7nRSAc7AH7',
       authorizationParams: {
         redirect_uri: window.location.origin,
