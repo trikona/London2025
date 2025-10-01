@@ -28,7 +28,7 @@ interface TravelSegment {
           <div class="header-content">
             <div class="header-left">
               <h1 class="main-title">✈️ London Adventure</h1>
-              <p class="subtitle">Dein kompletter Reiseüberblick.<br/> Wenn irgendwas ist, sag Bescheid. Bitte melden wenn was fehlt oder irgendwas ist . Ich bin auch nur ein Mensch und mache Fehler oder vergessse Dinge.</p>
+              <p class="subtitle">Dein kompletter Reiseüberblick.<br/> Wenn irgendwas ist, sag Bescheid. Bitte melden wenn was fehlt oder irgendwas ist. Ich bin auch nur ein Mensch und mache Fehler oder vergesse Dinge.</p>
             </div>
             <div class="header-right">
               <div class="user-profile" *ngIf="authState.user">
